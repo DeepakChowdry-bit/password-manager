@@ -88,6 +88,7 @@ const Manager = () => {
                 type: 'success',
                 transition: Flip,
             });
+            setForm(({ website: "", username: "", password: "" }))
         }
 
     };
