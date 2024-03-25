@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Bounce, Flip, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { IoIosClose } from "react-icons/io";
 
 
 const Manager = () => {
@@ -44,22 +45,51 @@ const Manager = () => {
         changePasswordType();
     };
 
+    const validateForm = () => {
+        const { website, username, password } = form;
+
+        // Check for empty fields
+        if (!website.trim() || !username.trim() || !password.trim()) {
+            toast.error('Please fill in all fields.', {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                type: 'error',
+                transition: Flip,
+            });
+            return false; // Prevent form submission if validation fails
+        }
+
+        // Additional validation rules (optional)
+        // You can add checks for password length, special characters, etc.
+
+        return true; // Form is valid, allow submission
+    };
+
 
     const savePassword = () => {
-        setPasswordArray([...passwordArray, form]); // Push new form into the array
-        localStorage.setItem("passwords", JSON.stringify([...passwordArray, form]));
-        toast('Password Saved', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            type: 'success',
-            transition: Bounce,
-        });
+        if (validateForm()) {
+            setPasswordArray([...passwordArray, form]); // Push new form into the array
+            localStorage.setItem("passwords", JSON.stringify([...passwordArray, form]));
+            toast('Password Saved', {
+                position: "bottom-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                type: 'success',
+                transition: Flip,
+            });
+        }
+
     };
 
     const deletePassword = (form) => {
@@ -75,8 +105,8 @@ const Manager = () => {
 
     const copytext = (text) => {
         toast('Copied to clipboard!', {
-            position: "top-right",
-            autoClose: 3000,
+            position: "bottom-right",
+            autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
@@ -84,7 +114,7 @@ const Manager = () => {
             progress: undefined,
             theme: "light",
             type: 'success',
-            transition: Bounce,
+            transition: Flip,
         });
         navigator.clipboard.writeText(text)
     }
@@ -103,29 +133,31 @@ const Manager = () => {
                 theme="light"
                 transition="Bounce"
             />
-            <div className='flex flex-col gap-5 h-full items-center justify-center py-28'>
-                <h2 className='text-xl font-bold uppercase'>
-                    Your <span className='text-green-500'>Password</span> Manager
+            <div className='flex flex-col gap-2 h-full items-center justify-center py-28'>
+                <h2 className='text-lg font-bold uppercase text-slate-700'>
+                    Your <span className='text-slate-900'>Password</span> Manager
                 </h2>
-                <div className='flex flex-col items-center justify-center w-[100%] md:w-[85%] gap-4 py-5'>
+                <div className='flex flex-col items-center justify-center w-[100%] md:w-[95%] gap-3 py-5'>
                     <input
                         value={form.website}
                         type='text'
-                        className='h-12 w-[95%] outline-none px-3 border border-[#999] rounded-sm'
+                        className='h-14 w-[92%] outline-none px-3 border border-[#999] rounded-sm'
                         placeholder='Website URL'
                         onChange={handlechange}
                         name='website'
+                        required
                     />
-                    <div className='w-[95%] flex items-center justify-center gap-2 flex-col md:flex-row'>
+                    <div className='w-[92%] flex items-center justify-center gap-3 flex-col md:flex-row'>
                         <input
                             value={form.username}
                             type='text'
-                            className='md:w-1/2 w-full h-12 border border-[#999] outline-none rounded-sm px-3'
+                            className='md:w-1/2 w-full h-14 border border-[#999] outline-none rounded-sm px-3'
                             placeholder='Username or Email'
                             onChange={handlechange}
                             name='username'
+                            required
                         />
-                        <div className='md:w-1/2 w-full h-12 border border-[#999] outline-none px-3 rounded-sm flex items-center justify-between'>
+                        <div className='md:w-1/2 w-full h-14 border border-[#999] outline-none px-3 rounded-sm flex items-center justify-between bg-white'>
                             <input
                                 value={form.password}
                                 ref={passref}
@@ -134,51 +166,51 @@ const Manager = () => {
                                 placeholder='Password'
                                 onChange={handlechange}
                                 name='password'
-
+                                required
                             />
-                            <p className='uppercase text-[11px] font-bold cursor-pointer select-none tracking-wide' onClick={showPassword}>
+                            <p className='uppercase text-[11px] font-semibold cursor-pointer select-none tracking-wide' onClick={showPassword}>
                                 Show
                             </p>
                         </div>
                     </div>
                     <input
                         type='button'
-                        className='bg-slate-900 w-[95%] h-10 text-[#eee] font-medium tracking-wide'
+                        className='bg-slate-950 w-[92%] h-12 text-[#eee] font-medium tracking-wide rounded'
                         value='Add Password'
                         onClick={savePassword}
                     />
                 </div>
 
-                <div className='flex flex-col items-center justify-center w-[100%] md:w-[85%] gap-4 py-5'>
-                    {passwordArray.length === 0 && <div>No Password Yet</div>}
-                    {passwordArray.length !== 0 && <table border='2' className='border border-[#555] w-[95%]'>
-                        <thead>
-                            <tr className='bg-slate-900 text-[#eee]'>
-                                <th className='border border-black font-medium w-2/6'>Website</th>
-                                <th className='border border-black font-medium w-2/6'>Username</th>
-                                <th className='border border-black font-medium w-2/6'>Password</th>
-                                <th className='border border-black font-medium w-1/6 px-3'>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {passwordArray.map((form, index) => (
-                                <tr key={index} className='text-center font-medium text-xs md:text-base'>
-                                    <td className='border border-black'>
-                                        <a href={form.website} target='_blank' rel="noreferrer">{form.website}</a>
-                                    </td>
-                                    <td className='border border-black'>{form.username}</td>
-                                    <td onClick={() => { copytext(form.password) }} className='border border-black cursor-pointer'>
-                                        {form.password}
-                                    </td>
-                                    <td className='flex items-center justify-center gap-4 text-xs font-normal '>
+                
 
-                                        <p className='w-full h-6 flex items-center justify-center bg-black text-white cursor-pointer rounded-sm' onClick={() => { deletePassword(form) }}>Delete</p>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>}
+                <div className='flex flex-wrap gap-3 items-center justify-center w-[100%] md:w-[95%]'>
+                    {passwordArray.map((form, index) => (
+                        <div className='flex flex-col items-center justify-center w-[92%] md:w-[30%] gap-3 border border-[#ccc] px-3 py-4 rounded shadow shadow-[#ccc]'>
+                            <div className='flex items-center justify-between w-full'>
+                                <h3 className='font-medium text-slate-600'>
+                                    <a href={form.website} target='_blank' rel="noreferrer">{form.website}</a>
+                                </h3>
+                                <IoIosClose onClick={() => { deletePassword(form) }} className='text-3xl font-medium' />
+                            </div>
+                            <div className='flex flex-col items-start justify-between w-full pr-1 gap-2 text-sm'>
+                                <h3 className='flex items-center justify-between w-full'>
+                                    Username : 
+                                    <p className='cursor-pointer'
+                                    onClick={() => { copytext(form.username) }}>{form.username}
+                                    </p>
+                                </h3>
+                                <h3 className='flex items-center justify-between w-full'>
+                                    Password : 
+                                    <p 
+                                    onClick={() => { copytext(form.password) }} className='pl-5 text-right cursor-pointer'>
+                                        {form.password}
+                                        </p>
+                                </h3>
+                            </div>
+                        </div>
+                    ))}
                 </div>
+
             </div>
         </>
 

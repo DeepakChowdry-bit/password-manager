@@ -5,7 +5,9 @@ import Manager from './components/Manager';
 function App() {
   return (
     <>
-      <Manager />
+      <div className='bg-slate-100'>
+        <Manager />
+      </div>
     </>
   );
 }
