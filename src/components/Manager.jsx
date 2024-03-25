@@ -186,7 +186,7 @@ const Manager = () => {
 
                 <div className='flex flex-wrap gap-3 items-center justify-center w-[100%] md:w-[95%]'>
                     {passwordArray.map((form, index) => (
-                        <div className='flex flex-col items-center justify-center w-[92%] md:w-[30%] gap-3 border border-[#ccc] px-3 py-4 rounded shadow shadow-[#ccc]'>
+                        <div className='bg-white flex flex-col items-center justify-center w-[92%] md:w-[30%] gap-3 border border-[#eee] px-3 py-4 rounded shadow shadow-[#eee]'>
                             <div className='flex items-center justify-between w-full'>
                                 <h3 className='font-medium text-slate-600'>
                                     <a href={form.website} target='_blank' rel="noreferrer">{form.website}</a>
